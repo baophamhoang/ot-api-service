@@ -1,0 +1,111 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserStatus {
+  ACTIVE
+  INACTIVE
+}
+
+model User {
+  id         String     @id(map: "pk_user") @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  createdAt  DateTime   @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt  DateTime   @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+  firstName  String     @map("first_name") @db.VarChar(128)
+  lastName   String     @map("last_name") @db.VarChar(128)
+  middleName String     @map("middle_name") @db.VarChar(128)
+  username   String     @map("username") @db.VarChar(255)
+  email      String     @map("email") @db.VarChar(255)
+  status     UserStatus @default(ACTIVE) @map("status")
+  avatarUrl  String?    @map("avatar_url") @db.Text
+
+  // Relation
+  roles UserToRole[]
+
+  @@map("user")
+}
+
+model Role {
+  id           String   @id(map: "pk_role") @default(dbgenerated("uuid_generate_v4()")) @map("id") @db.Uuid
+  createdAt    DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt    DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+  name         String   @db.VarChar(64)
+  displayName  String   @map("display_name") @db.VarChar(64)
+  description  String?  @db.VarChar(255)
+  canBeUpdated Boolean  @default(true) @map("can_be_updated") @db.Boolean
+  canBeDeleted Boolean  @default(true) @map("can_be_deleted") @db.Boolean
+
+  // Relation
+  users       UserToRole[]
+  permissions RoleToPermission[]
+
+  @@map("role")
+}
+
+model Permission {
+  id                String   @id(map: "pk_permission") @default(dbgenerated("uuid_generate_v4()")) @map("id") @db.Uuid
+  createdAt         DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt         DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+  resourceName      String   @map("resource_name") @db.VarChar(255)
+  name              String   @map("name") @db.VarChar(255)
+  displayName       String   @map("display_name") @db.VarChar(255)
+  discription       String?  @map("description") @db.VarChar(255)
+  canCreate         Boolean  @map("can_create") @db.Boolean
+  canRead           Boolean  @map("can_read") @db.Boolean
+  canUpdate         Boolean  @map("can_update") @db.Boolean
+  canDelete         Boolean  @map("can_delete") @db.Boolean
+  permissionGroupId String   @map("permission_group_id") @db.Uuid
+
+  // Relation
+  roles           RoleToPermission[]
+  permissionGroup PermissionGroup    @relation(fields: [permissionGroupId], references: [id], onUpdate: Cascade, onDelete: Cascade, map: "fk_permission_permission_group_id")
+
+  @@map("permission")
+}
+
+model PermissionGroup {
+  id          String   @id(map: "pk_permission_group") @default(dbgenerated("uuid_generate_v4()")) @map("id") @db.Uuid
+  createdAt   DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt   DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+  name        String   @map("name") @db.VarChar(255)
+  description String   @map("description") @db.VarChar(255)
+
+  // Relation
+  permissions Permission[]
+}
+
+model UserToRole {
+  userId    String   @map("user_id") @db.Uuid
+  roleId    String   @map("role_ip") @db.Uuid
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  // Relation
+  user User @relation(fields: [userId], references: [id], onUpdate: Cascade, onDelete: Cascade, map: "fk_user_to_role_user")
+  role Role @relation(fields: [roleId], references: [id], onUpdate: Cascade, onDelete: Cascade, map: "fk_user_to_role_role")
+
+  @@id([userId, roleId], map: "pk_user_to_role")
+  @@map("user_to_role")
+}
+
+model RoleToPermission {
+  roleId       String   @map("role_id") @db.Uuid
+  permissionId String   @map("permission_id") @db.Uuid
+  createdAt    DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt    DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  // Relation
+  role       Role       @relation(fields: [roleId], references: [id], onUpdate: Cascade, onDelete: Cascade, map: "fk_role_to_permission_role")
+  permission Permission @relation(fields: [roleId], references: [id], onUpdate: Cascade, onDelete: Cascade, map: "fk_role_to_permission_permission")
+
+  @@id([roleId, permissionId], map: "pk_role_to_permission")
+  @@map("role_to_permission")
+}
