@@ -9,10 +9,10 @@ import { LoggerModule as PinoLoggerModule } from 'nestjs-pino';
         customProps: (req) => ({
           reqUserId: req?.id, // TODO: replace to req.user.id
         }),
-        transport: { target: 'pino-pretty' }, // TODO: Apply local only in local env
+        transport: process.env.NODE_ENV !== 'production' ? { target: 'pino-pretty' } : undefined,
         redact: {
           paths: ['req.headers.authorization', 'req.headers.cookie'],
-          censor: (_, paths) => (paths.includes('authorization') ? 'Bearer ***' : '***'),
+          censor: (_, path) => (path?.includes('authorization') ? 'Bearer ***' : '***'),
         },
         serializers: {
           req: (req) => {
