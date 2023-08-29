@@ -12,7 +12,7 @@ export const appStateConfig = registerAs(configKey, () => ({
 
 export const appStateConfigSchema = zod.object({
   NODE_ENV: zod.union([z.literal('local'), z.literal('development'), z.literal('production')]).optional(),
-  PORT: zod.number().default(3000),
+  PORT: zod.number().or(zod.string()).default(3000).optional(),
 });
 
 export type AppStateConfig = ConfigType<typeof appStateConfig>;
