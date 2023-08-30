@@ -12,12 +12,11 @@ export class SignInHandler implements ICommandHandler<SignInCommand, SignInRespo
     const {
       body: { code },
     } = command;
-    return code as any;
-    // try {
-    //   const { id_token: idToken } = await this.slackService.getToken(code);
-    //   return { accessToken: idToken };
-    // } catch (error) {
-    //   throw new BadRequestException(error.message);
-    // }
+    try {
+      const { id_token: idToken } = await this.slackService.getToken(code);
+      return { accessToken: idToken };
+    } catch (error) {
+      throw new BadRequestException(error.message);
+    }
   }
 }

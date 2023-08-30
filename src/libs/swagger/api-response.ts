@@ -1,4 +1,5 @@
-import { applyDecorators, Type } from '@nestjs/common';
+import { ApiListResponseDto, ApiResponseDto } from '../../shared';
+import { Type, applyDecorators } from '@nestjs/common';
 import {
   ApiExtraModels,
   ApiForbiddenResponse,
@@ -7,11 +8,30 @@ import {
   ApiOkResponse,
   ApiUnauthorizedResponse,
   getSchemaPath,
+  ApiCreatedResponse,
 } from '@nestjs/swagger';
-import { ApiListResponseDto, ApiResponseDto } from './dto';
 
 export const ApiResponse = <TModel extends Type<any>>(model?: TModel) => {
   const commonResponseDecorators = [
+    ApiCreatedResponse({
+      description: 'Created',
+      schema: {
+        properties: {
+          success: {
+            type: 'boolean',
+            example: true,
+          },
+          code: {
+            type: 'number',
+            example: 201,
+          },
+          timestamp: {
+            type: 'number',
+            example: 1617826799860,
+          },
+        },
+      },
+    }),
     ApiUnauthorizedResponse({
       description: 'Not authenticated',
       schema: {
@@ -138,6 +158,7 @@ export const ApiResponse = <TModel extends Type<any>>(model?: TModel) => {
     ? applyDecorators(
         ApiExtraModels(ApiResponseDto, model),
         ApiOkResponse({
+          description: 'OK',
           schema: {
             allOf: [
               { $ref: getSchemaPath(ApiResponseDto) },
