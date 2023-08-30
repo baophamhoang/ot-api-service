@@ -18,6 +18,7 @@ export class SlackService {
       client_secret: this.config.clientSecret,
       grant_type: 'authorization_code',
       code,
+      redirect_uri: 'https://localhost:8081',
     });
     return token;
   }
