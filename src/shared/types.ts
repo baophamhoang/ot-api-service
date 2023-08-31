@@ -30,3 +30,29 @@ export class ApiListResponseDto<T> {
   @ApiProperty({ example: 1617826799860 })
   timestamp: number;
 }
+
+export class ApiErrorDto {
+  @ApiProperty()
+  success: boolean;
+
+  @ApiProperty()
+  code: number;
+
+  @ApiProperty()
+  errorId: string;
+
+  @ApiProperty()
+  message: string;
+
+  @ApiProperty()
+  error: unknown;
+
+  @ApiProperty()
+  stack: string[];
+
+  @ApiProperty()
+  timestamp: number;
+
+  @ApiProperty()
+  path: string;
+}
