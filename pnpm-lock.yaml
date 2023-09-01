@@ -46,6 +46,9 @@ dependencies:
   nestjs-pino:
     specifier: ^3.4.0
     version: 3.4.0(@nestjs/common@9.4.3)(pino-http@8.4.0)
+  node-fetch:
+    specifier: ^2.6.6
+    version: 2.7.0
   passport-jwt:
     specifier: ^4.0.1
     version: 4.0.1
