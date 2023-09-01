@@ -1,12 +1,13 @@
 import { combineSchemas } from '@/utils';
 import { Global, Module } from '@nestjs/common';
 import { ConfigFactory, ConfigModule as NestConfigModule } from '@nestjs/config';
+import { apiConfig, apiConfigSchema } from './api';
+import { appStateConfig, appStateConfigSchema } from './app-state';
 import { ConfigService } from './config.service';
 import { slackConfig, slackConfigSchema } from './slack';
-import { appStateConfig, appStateConfigSchema } from './app-state';
 
-const configs: ConfigFactory[] = [slackConfig, appStateConfig];
-const validationSchema = combineSchemas(slackConfigSchema, appStateConfigSchema);
+const configs: ConfigFactory[] = [slackConfig, appStateConfig, apiConfig];
+const validationSchema = combineSchemas(slackConfigSchema, appStateConfigSchema, apiConfigSchema);
 
 @Global()
 @Module({

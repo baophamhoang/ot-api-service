@@ -9,6 +9,11 @@ import { ApplicationExceptionFilter, HttpExceptionFilter } from './shared';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, { bufferLogs: true });
 
+  const config = app.get(ConfigService);
+
+  app.setGlobalPrefix(config.prefix);
+  app.enableVersioning();
+
   // logger
   const logger = app.get(Logger);
   app.useLogger(logger);
@@ -21,8 +26,6 @@ async function bootstrap() {
 
   // validation
   app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }));
-
-  const config = app.get(ConfigService);
 
   await app.listen(config.port);
 

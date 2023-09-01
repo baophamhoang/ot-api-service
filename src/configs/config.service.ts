@@ -1,6 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { SlackConfig, slackConfig } from './slack';
+import { ApiConfig, apiConfig } from './api';
 import { AppStateConfig, NodeEnv, appStateConfig } from './app-state';
+import { SlackConfig, slackConfig } from './slack';
 
 @Injectable()
 export class ConfigService {
@@ -11,9 +12,13 @@ export class ConfigService {
   public readonly port: number;
   public readonly nodeEnv: NodeEnv;
 
+  public readonly prefix: string;
+  public readonly version: string;
+
   constructor(
     @Inject(slackConfig.KEY) slackConfiguration: SlackConfig,
     @Inject(appStateConfig.KEY) appStateConfiguration: AppStateConfig,
+    @Inject(apiConfig.KEY) apiConfiguration: ApiConfig,
   ) {
     this.clientID = slackConfiguration.clientID;
     this.clientSecret = slackConfiguration.clientSecret;
@@ -21,5 +26,8 @@ export class ConfigService {
 
     this.port = appStateConfiguration.port;
     this.nodeEnv = appStateConfiguration.nodeEnv;
+
+    this.prefix = apiConfiguration.prefix;
+    this.version = apiConfiguration.version;
   }
 }
