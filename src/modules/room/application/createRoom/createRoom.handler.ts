@@ -1,4 +1,3 @@
-import { PuppeteerService } from '@/common/puppeteer';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { CreateRoomCommand } from './createRoom.command';
 import { BadRequestException } from '@nestjs/common';
@@ -6,7 +5,7 @@ import { PrismaService } from '@/common/database';
 
 @CommandHandler(CreateRoomCommand)
 export class CreateRoomHandler implements ICommandHandler<CreateRoomCommand, void> {
-  constructor(private readonly puppeteerService: PuppeteerService, private readonly db: PrismaService) {}
+  constructor(private readonly db: PrismaService) {}
 
   async execute(command: CreateRoomCommand): Promise<void> {
     const {
@@ -14,7 +13,7 @@ export class CreateRoomHandler implements ICommandHandler<CreateRoomCommand, voi
       body: { scrapingUrl, dueTime, alias },
     } = command;
 
-    const scraped = await this.puppeteerService.scrapeRestaurant(scrapingUrl);
+    const scraped = { data: {}, json: '' };
 
     if (!scraped) {
       throw new BadRequestException('The restaurant url is invalid.');

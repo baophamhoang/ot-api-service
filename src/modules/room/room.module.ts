@@ -1,4 +1,3 @@
-import { PuppeteerService } from '@/common/puppeteer';
 import { detachApplication } from '@/utils';
 import { Module } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
@@ -9,6 +8,6 @@ const { endpoints, handlers } = detachApplication(Object.values(application));
 @Module({
   imports: [CqrsModule],
   controllers: [...endpoints],
-  providers: [...handlers, PuppeteerService],
+  providers: [...handlers],
 })
 export class RoomModule {}
