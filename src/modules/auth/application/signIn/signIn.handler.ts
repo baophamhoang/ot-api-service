@@ -58,7 +58,11 @@ export class SignInHandler implements ICommandHandler<SignInCommand, SignInRespo
         fullName: userInfo.name,
         username: userInfo.email,
         email: userInfo.email,
-        avatarUrl: userInfo.picture,
+        profile: {
+          create: {
+            avatarUrl: userInfo.picture,
+          },
+        },
         roles: {
           createMany: {
             data: roles.map((r) => ({ roleId: r.id })),

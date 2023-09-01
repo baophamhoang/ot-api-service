@@ -26,17 +26,31 @@ model User {
   username   String     @map("username") @db.VarChar(255)
   email      String     @map("email") @db.VarChar(255)
   status     UserStatus @default(ACTIVE) @map("status")
-  avatarUrl  String?    @map("avatar_url") @db.Text
   sub        String     @map("sub") @db.VarChar(255)
 
   // Relation
   hostingRooms Room[]
   rooms        UserToRoom[]
   roles        UserToRole[]
+  profile      Profile?
 
   // Indexing
   @@unique([email, sub])
   @@map("user")
+}
+
+model Profile {
+  id          String   @id(map: "pk_profile") @map("id") @db.Uuid
+  createdAt   DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt   DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+  bankName    String?  @map("bank_name") @db.VarChar(255)
+  bankAccount String?  @map("bank_account") @db.VarChar(128)
+  avatarUrl   String?  @map("avatar_url") @db.Text
+
+  //Relation
+  user User @relation(fields: [id], references: [id], onUpdate: Cascade, onDelete: Cascade, map: "fk_profile_user")
+
+  @@map("profile")
 }
 
 model Role {
