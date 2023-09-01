@@ -1,6 +1,6 @@
 import { PrismaService } from '@/common/database/prisma.service';
 import { SlackService } from '@/libs';
-import { RequestUser, UserRole } from '@/shared';
+import { SlackUser, UserRole } from '@/shared';
 import { BadRequestException } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { decode } from 'jsonwebtoken';
@@ -30,7 +30,7 @@ export class SignInHandler implements ICommandHandler<SignInCommand, SignInRespo
 
   async createUser(idToken: string) {
     const DEFAULT_ROLES = [UserRole.User];
-    const userInfo = decode(idToken) as RequestUser;
+    const userInfo = decode(idToken) as SlackUser;
     const roles = await this.db.role.findMany({
       where: {
         name: {

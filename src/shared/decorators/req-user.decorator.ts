@@ -1,6 +1,6 @@
 import { ExecutionContext, createParamDecorator } from '@nestjs/common';
 
-export interface RequestUser {
+export interface SlackUser {
   iss: string;
   sub: string;
   aud: string;
@@ -23,6 +23,10 @@ export interface RequestUser {
   'https://slack.com/team_domain': string;
   'https://slack.com/team_image_230': string;
   'https://slack.com/team_image_default': boolean;
+}
+
+export interface RequestUser extends SlackUser {
+  id: string;
 }
 
 export const ReqUser = createParamDecorator((data: unknown, ctx: ExecutionContext) => {
