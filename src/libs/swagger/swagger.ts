@@ -9,6 +9,7 @@ export class SwaggerDocs {
       .setDescription('The OT Api Service')
       .setVersion('1.0')
       .addTag('OT Api Service')
+      .addBearerAuth()
       .build();
 
     const options: SwaggerDocumentOptions = {
