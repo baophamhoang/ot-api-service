@@ -12,7 +12,7 @@ export class SlackService {
     }
   }
 
-  async getToken(code: string) {
+  public async getToken(code: string) {
     const token = await this.client.openid.connect.token({
       client_id: this.config.clientID,
       client_secret: this.config.clientSecret,
@@ -21,5 +21,10 @@ export class SlackService {
       redirect_uri: 'https://localhost:8081',
     });
     return token;
+  }
+
+  public async getUserInfo(accessToken: string) {
+    const userInfo = await this.client.openid.connect.userInfo({ accessToken });
+    return userInfo;
   }
 }

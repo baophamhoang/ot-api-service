@@ -11,7 +11,10 @@ export class ConfigService {
   public readonly port: number;
   public readonly nodeEnv: NodeEnv;
 
-  constructor(@Inject(slackConfig.KEY) slackConfiguration: SlackConfig, @Inject(appStateConfig.KEY) appStateConfiguration: AppStateConfig) {
+  constructor(
+    @Inject(slackConfig.KEY) slackConfiguration: SlackConfig,
+    @Inject(appStateConfig.KEY) appStateConfiguration: AppStateConfig,
+  ) {
     this.clientID = slackConfiguration.clientID;
     this.clientSecret = slackConfiguration.clientSecret;
     this.issuer = slackConfiguration.issuer;
