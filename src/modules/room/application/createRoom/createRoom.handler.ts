@@ -1,4 +1,5 @@
 import { PrismaService } from '@/common/database';
+import { ConfigService } from '@/configs';
 import { BadRequestException } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import fetch from 'node-fetch';
@@ -6,7 +7,7 @@ import { CreateRoomCommand } from './createRoom.command';
 
 @CommandHandler(CreateRoomCommand)
 export class CreateRoomHandler implements ICommandHandler<CreateRoomCommand, void> {
-  constructor(private readonly db: PrismaService) {}
+  constructor(private readonly db: PrismaService, private readonly config: ConfigService) {}
 
   async execute(command: CreateRoomCommand): Promise<void> {
     const {
@@ -14,7 +15,7 @@ export class CreateRoomHandler implements ICommandHandler<CreateRoomCommand, voi
       body: { scrapingUrl, dueTime, alias },
     } = command;
 
-    const apiUrl = new URL('https://ot-s.onrender.com/api/scraping');
+    const apiUrl = new URL(this.config.scrapingSvc);
     apiUrl.searchParams.set('url', encodeURI(scrapingUrl));
     try {
       const response = await fetch(apiUrl.href);

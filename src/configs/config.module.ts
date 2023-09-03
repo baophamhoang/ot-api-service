@@ -5,9 +5,10 @@ import { apiConfig, apiConfigSchema } from './api';
 import { appStateConfig, appStateConfigSchema } from './app-state';
 import { ConfigService } from './config.service';
 import { slackConfig, slackConfigSchema } from './slack';
+import { serviceConfig, serviceConfigSchema } from './service';
 
-const configs: ConfigFactory[] = [slackConfig, appStateConfig, apiConfig];
-const validationSchema = combineSchemas(slackConfigSchema, appStateConfigSchema, apiConfigSchema);
+const configs: ConfigFactory[] = [slackConfig, appStateConfig, apiConfig, serviceConfig];
+const validationSchema = combineSchemas(slackConfigSchema, appStateConfigSchema, apiConfigSchema, serviceConfigSchema);
 
 @Global()
 @Module({
