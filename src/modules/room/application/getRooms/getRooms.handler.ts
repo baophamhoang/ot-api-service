@@ -9,12 +9,14 @@ export class GetRoomsHandler implements ICommandHandler<GetRoomsQuery, any> {
   async execute(query: GetRoomsQuery): Promise<any> {
     const rooms = await this.db.room.findMany({
       select: {
+        id: true,
         alias: true,
         createdAt: true,
         dueTime: true,
         scrapingData: true,
         host: {
           select: {
+            id: true,
             firstName: true,
             lastName: true,
             middleName: true,
