@@ -10,7 +10,7 @@ import { LoggerModule as PinoLoggerModule } from 'nestjs-pino';
       useFactory: async (config: ConfigService) => {
         return {
           pinoHttp: {
-            level: 'debug',
+            level: config.nodeEnv !== 'local' ? 'debug' : 'info',
             customProps: (req) => ({
               reqUserId: req?.id, // TODO: replace to req.user.id
             }),
