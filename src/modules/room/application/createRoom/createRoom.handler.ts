@@ -29,7 +29,7 @@ export class CreateRoomHandler implements ICommandHandler<CreateRoomCommand, voi
           hostId: reqUser.id,
           scrapingUrl,
           alias,
-          scrapingData: JSON.stringify(scraped),
+          scrapingData: scraped,
           dueTime,
         },
       });
