@@ -30,6 +30,6 @@ async function bootstrap() {
   await app.listen(config.port);
 
   const url = await app.getUrl();
-  logger.debug(`Application is running on env: ${config.nodeEnv}. url: ${url}`);
+  logger.log(`Application is running on env: ${config.nodeEnv}. swagger: ${url}/${config.prefix}/swagger`);
 }
 bootstrap();

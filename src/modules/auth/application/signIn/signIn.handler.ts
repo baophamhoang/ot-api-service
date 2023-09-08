@@ -14,10 +14,11 @@ export class SignInHandler implements ICommandHandler<SignInCommand, SignInRespo
   async execute(command: SignInCommand): Promise<SignInResponse> {
     const {
       body: { code },
+      origin,
     } = command;
     let idToken: string = null;
     try {
-      const { id_token } = await this.slackService.getToken(code);
+      const { id_token } = await this.slackService.getToken(code, origin);
       idToken = id_token;
     } catch (error) {
       throw new BadRequestException(error.message);

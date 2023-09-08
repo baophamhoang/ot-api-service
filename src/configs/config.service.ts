@@ -9,6 +9,7 @@ export class ConfigService {
   public readonly clientID: string;
   public readonly clientSecret: string;
   public readonly issuer: string;
+  public readonly redirectURI: string;
 
   public readonly port: number;
   public readonly nodeEnv: NodeEnv;
@@ -27,6 +28,7 @@ export class ConfigService {
     this.clientID = slackConfiguration.clientID;
     this.clientSecret = slackConfiguration.clientSecret;
     this.issuer = slackConfiguration.issuer;
+    this.redirectURI = slackConfiguration.redirectURI;
 
     this.port = appStateConfiguration.port;
     this.nodeEnv = appStateConfiguration.nodeEnv;
