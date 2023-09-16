@@ -15,6 +15,11 @@ enum UserStatus {
   INACTIVE
 }
 
+enum OrderStatus {
+  NOT_PAID
+  PAID
+}
+
 model User {
   id         String     @id(map: "pk_user") @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
   createdAt  DateTime   @default(now()) @map("created_at") @db.Timestamptz(6)
@@ -31,6 +36,7 @@ model User {
   // Relation
   hostingRooms Room[]
   rooms        UserToRoom[]
+  orders       Order[]
   roles        UserToRole[]
   profile      Profile?
 
@@ -139,11 +145,14 @@ model Room {
   dueTime      DateTime? @map("due_time") @db.Timestamptz(6)
   alias        String?   @map("alias") @db.VarChar(255)
   scrapingData Json      @map("scraping_data") @db.JsonB
+  discount     Decimal?  @map("discount") @db.Decimal
   hostId       String    @map("host_id") @db.Uuid
+  restaurantId String    @map("restaurant_id") @db.VarChar(255)
 
   // Relation
   host    User         @relation(fields: [hostId], references: [id], onUpdate: Cascade, onDelete: Cascade, map: "fk_room_host")
   members UserToRoom[]
+  orders  Order[]
 
   @@map("room")
 }
@@ -158,4 +167,31 @@ model UserToRoom {
 
   @@id([userId, roomId], map: "pk_user_to_room")
   @@map("user_to_room")
+}
+
+model Order {
+  id        String   @id(map: "pk_order") @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+  roomId    String   @map("room_id") @db.Uuid
+  userId    String   @map("user_id") @db.Uuid
+
+  // Relation
+  room   Room         @relation(fields: [roomId], references: [id], map: "fk_order_room")
+  user   User         @relation(fields: [userId], references: [id], map: "fk_order_user")
+  detail OrderDetail?
+
+  @@map("order")
+}
+
+model OrderDetail {
+  id     String      @id(map: "pk_order_detail") @db.Uuid
+  price  Decimal     @map("price") @db.Decimal
+  dishes Json        @map("dishes") @db.JsonB
+  status OrderStatus @default(NOT_PAID) @map("status")
+
+  // Relation
+  order Order @relation(fields: [id], references: [id], onDelete: Cascade, map: "fk_order_order_detail")
+
+  @@map("order_detail")
 }

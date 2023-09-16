@@ -21,7 +21,7 @@ export class CreateRoomHandler implements ICommandHandler<CreateRoomCommand, voi
       const response = await fetch(apiUrl.href);
       const scraped = await response.json();
 
-      if (!scraped) {
+      if (!scraped || !scraped.activeMerchantID) {
         throw new BadRequestException('The restaurant url is invalid.');
       }
 
@@ -32,6 +32,7 @@ export class CreateRoomHandler implements ICommandHandler<CreateRoomCommand, voi
           alias,
           scrapingData: scraped,
           dueTime,
+          restaurantId: scraped.activeMerchantID,
         },
       });
 

@@ -20,5 +20,5 @@ export class CreateRoomRequestBody {
   @IsString()
   @IsOptional()
   @IsNotEmpty()
-  alias: string;
+  alias?: string;
 }

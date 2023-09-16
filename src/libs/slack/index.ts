@@ -14,13 +14,14 @@ export class SlackService {
 
   public async getToken(code: string, origin: string) {
     const VALID_REDIRECT_URI = ['https://localhost:8081', this.config.redirectURI];
-
+    const redirectURI = VALID_REDIRECT_URI.includes(origin) ? origin : this.config.redirectURI;
     const token = await this.client.openid.connect.token({
       client_id: this.config.clientID,
       client_secret: this.config.clientSecret,
       grant_type: 'authorization_code',
       code,
-      redirect_uri: VALID_REDIRECT_URI.includes(origin) ? origin : this.config.redirectURI,
+      redirect_uri: `${redirectURI}/`,
+      // redirect_uri: 'https://localhost:8081/',
       // redirect_uri: this.config.nodeEnv === 'local' ? 'https://localhost:8081' : 'https://dha-ot.vercel.app',
     });
     return token;
