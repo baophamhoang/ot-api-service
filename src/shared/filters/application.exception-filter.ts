@@ -9,9 +9,8 @@ export class ApplicationExceptionFilter implements ExceptionFilter {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
     const request = ctx.getRequest<Request>();
-    const status = exception?.getStatus();
-
-    const { message, error } = exception.getResponse() as {
+    const status = exception?.getStatus?.() ?? 500;
+    const { message, error } = (exception.getResponse?.() || {}) as {
       message: string;
       error: unknown;
     };
