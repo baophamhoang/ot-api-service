@@ -3,6 +3,8 @@ import { Logger } from '@nestjs/common';
 import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 import { GetMyOrdersQuery } from './getMyOrders.query';
 import { GetMyOrdersQueryResponse } from './getMyOrders.response';
+import { ScrapingData } from '@/shared';
+import { Prisma } from '@prisma/client';
 
 @QueryHandler(GetMyOrdersQuery)
 export class GetMyOrdersHandler implements IQueryHandler<GetMyOrdersQuery, GetMyOrdersQueryResponse> {
@@ -26,6 +28,7 @@ export class GetMyOrdersHandler implements IQueryHandler<GetMyOrdersQuery, GetMy
             dueTime: true,
             discount: true,
             alias: true,
+            scrapingData: true,
             host: {
               select: {
                 firstName: true,
@@ -42,6 +45,15 @@ export class GetMyOrdersHandler implements IQueryHandler<GetMyOrdersQuery, GetMy
       },
     });
 
-    return orders.map((order) => ({ ...order, detail: { ...order.detail, price: order.detail.price.toNumber() } }));
+    return orders.map(({ detail, room, ...order }) => ({
+      ...order,
+      detail: { ...detail, price: detail.price.toNumber() },
+      room: {
+        ...room,
+        scrapingData: {
+          name: Object.values((room.scrapingData as Prisma.JsonObject).entities)[0].name,
+        },
+      },
+    }));
   }
 }
