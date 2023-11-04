@@ -19,6 +19,11 @@ export class ConfigService {
 
   public readonly scrapingSvc: string;
 
+  // defaultToken for dev - remove later
+  public readonly defaultBearer: string;
+
+  public readonly DEV_MODE: boolean;
+
   constructor(
     @Inject(slackConfig.KEY) slackConfiguration: SlackConfig,
     @Inject(appStateConfig.KEY) appStateConfiguration: AppStateConfig,
@@ -37,5 +42,9 @@ export class ConfigService {
     this.version = apiConfiguration.version;
 
     this.scrapingSvc = serviceConfiguration.scrapingSvc;
+
+    this.defaultBearer = slackConfiguration.defaultBearer;
+
+    this.DEV_MODE = this.nodeEnv === 'local';
   }
 }
