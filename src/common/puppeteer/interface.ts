@@ -1,4 +1,4 @@
-// export interface ScrapeRestaurantResponse {
-//   data: any;
-//   json: string;
-// }
+export interface ScrapeRestaurantResponse {
+  data: any;
+  json: string;
+}
