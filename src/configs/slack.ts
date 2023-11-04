@@ -7,6 +7,7 @@ export const slackConfig = registerAs(configKey, () => ({
   clientSecret: process.env.CLIENT_SECRET,
   issuer: process.env.ISSUER,
   redirectURI: process.env.REDIRECT_URI,
+  defaultBearer: process.env.DEFAULT_BEARER,
 }));
 
 export const slackConfigSchema = zod.object({
@@ -14,6 +15,7 @@ export const slackConfigSchema = zod.object({
   CLIENT_SECRET: zod.string(),
   ISSUER: zod.string().default('https://slack.com'),
   REDIRECT_URI: zod.string().min(1),
+  defaultBearer: zod.string().optional(),
 });
 
 export type SlackConfig = ConfigType<typeof slackConfig>;

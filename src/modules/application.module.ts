@@ -1,11 +1,19 @@
-import { Module } from '@nestjs/common';
+import { ConfigService } from '@/configs';
+import { BypassAuthguardMiddleware } from '@/middleware/bypass-authguard.middleware';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { AuthModule } from './auth';
+import { OrderModule } from './order';
 import { ProfileModule } from './profile';
 import { RoomModule } from './room';
-import { OrderModule } from './order';
-// import { UserModule } from './user';
 
 @Module({
   imports: [AuthModule, ProfileModule, RoomModule, OrderModule],
 })
-export class ApplicationModule {}
+export class ApplicationModule implements NestModule {
+  constructor(private readonly configService: ConfigService) {}
+  configure(consumer: MiddlewareConsumer) {
+    if (this.configService.DEV_MODE) {
+      consumer.apply(BypassAuthguardMiddleware).forRoutes('*');
+    }
+  }
+}
